@@ -231,5 +231,42 @@ module.exports = {
             console.log('DB seeded!')
             res.sendStatus(200)
         }).catch(err => console.log('error seeding DB', err))
+    },
+
+    getCountries: (req, res) => {
+
+        sequelize.query(`
+            SELECT * FROM countries
+        `)
+            .then((dbRes) => {
+                console.log('getCountries success!')
+                res.status(200).send(dbRes[0])
+            })
+            .catch((theseHands) => {
+                console.log('Error with getCountries')
+                console.log(theseHands)
+                res.status(500).send(theseHands)
+            })
+    },
+//TODO: possibly need to make countryId into country_id... lines 254 and 258
+    createCity: (req, res) => {
+        
+        const {name, rating, country_id} = req.body
+
+        sequelize.query(`
+            INSERT INTO cities
+            (name, rating, country_id)
+            VALUES
+            ('${name}', ${rating}, ${county_id})
+        `)
+            .then((dbRes) => {
+                console.log('createCity success!')
+                res.status(200).send(dbRes[0])
+            })
+            .catch((theseHands) => {
+                console.log('Error with createCity')
+                console.log(theseHands)
+                res.status(500).send(theseHands)
+            })
     }
 }
