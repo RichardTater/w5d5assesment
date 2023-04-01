@@ -248,16 +248,16 @@ module.exports = {
                 res.status(500).send(theseHands)
             })
     },
-//TODO: possibly need to make countryId into country_id... lines 254 and 258
+
     createCity: (req, res) => {
         
-        const {name, rating, country_id} = req.body
+        const {name, rating, countryId} = req.body
 
         sequelize.query(`
             INSERT INTO cities
             (name, rating, country_id)
             VALUES
-            ('${name}', ${rating}, ${county_id})
+            ('${name}', ${rating}, ${countryId})
         `)
             .then((dbRes) => {
                 console.log('createCity success!')
@@ -268,5 +268,47 @@ module.exports = {
                 console.log(theseHands)
                 res.status(500).send(theseHands)
             })
-    }
+    },
+
+    getCities: (req, res) => {
+        
+        sequelize.query(`
+            SELECT
+                a.city_id,
+                a.name AS city,
+                a.rating,
+                b.country_id,
+                b.name AS country 
+            FROM cities AS a 
+            JOIN countries AS b ON a.country_id = b.country_id;
+        `)
+            .then((dbRes) => {
+                console.log('getCities success!')
+                res.status(200).send(dbRes[0])
+            })
+            .catch((theseHands) => {
+                console.log('Error with getCities')
+                console.log(theseHands)
+                res.status(500).send(theseHands)
+            })
+    },
+
+    deleteCity: (req, res) => {
+
+        const {id} = req.params
+
+        sequelize.query(`
+            DELETE FROM cities
+            WHERE city_id = ${id};
+        `)
+            .then((dbRes) => {
+                console.log('getCities success!')
+                res.status(200).send(dbRes[0])
+            })
+            .catch((theseHands) => {
+                console.log('Error with getCities')
+                console.log(theseHands)
+                res.status(500).send(theseHands)
+            })
+     }
 }
